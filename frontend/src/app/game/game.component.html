@@ -1,0 +1,51 @@
+<div class="container my-2 px-0">
+        <h1 class="text-center text-decoration-underline">Treasure Hunter Game</h1>
+
+        <!-- PLAYER NAME -->
+        <form class="row my-3" #userForm="ngForm" (ngSubmit)="onSubmit()" novalidate *ngIf="!submitted">
+                <div class="col-10 px-0">
+                        <input type="text" class="form-control" placeholder="Player Name" #name="ngModel" name="name"
+                                [(ngModel)]="userModel.name"
+                                [ngClass]="{ 'is-invalid': userForm.touched && name.invalid }" required>
+                        <div *ngIf="userForm.touched && name.invalid" class="invalid-feedback">
+                                <div *ngIf="name.errors.required">Name is required</div>
+                        </div>
+                </div>
+                <div class="col-2">
+                        <button type="submit" class="btn btn-primary" [disabled]="userForm.form.invalid">Submit</button>
+                </div>
+        </form>
+        <div style="margin-left: -12px;" class="alert alert-success p-2 text-center" role="alert" *ngIf="success">
+                <h3>You Win 👍👍👍</h3>
+        </div>
+        <!-- BOARD -->
+        <h5 *ngFor="let score of userService.users">
+                Player Name:{{score.name}}
+        </h5>
+        <div class="row my-4">
+                <div class="col-7 px-0">
+                        <div class="board">
+                                <button class="btn bg-secondary p-0" *ngFor="let item of items" (click)="show($event)">
+                                        <span class="d-none">{{item}}</span>
+                                </button>
+                        </div>
+                </div>
+                <div class="col-5 px-0">
+                        <h3 class="text-center">Score Board</h3>
+                        <table class="table">
+                                <thead>
+                                        <tr>
+                                                <th>Player Name</th>
+                                                <th>Score/Turn</th>
+                                        </tr>
+                                </thead>
+                                <tbody>
+                                        <tr *ngFor="let score of userService.users">
+                                                <td>{{score.name}}</td>
+                                        </tr>
+                                </tbody>
+                        </table>
+                </div>
+
+        </div>
+</div>

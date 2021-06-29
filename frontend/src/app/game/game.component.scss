@@ -1,0 +1,40 @@
+.board {
+  display: grid;
+  grid-template-columns: repeat(5, 70px);
+  grid-template-rows: repeat(5, 70px);
+  grid-gap: 1px;
+  text-align: center;
+}
+
+.random {
+  font-weight: 600;
+  font-size: 18px;
+}
+
+.orange {
+  background: #ff5722;
+}
+
+.light-orange {
+  background: #ff5722ba;
+}
+
+.fent-orange {
+  background: #ff572282;
+}
+
+.disabled {
+  pointer-events: none;
+}
+
+.enable {
+  opacity: 1 !important;
+}
+
+button span {
+  font-weight: 700;
+  font-size: 18px;
+}
+.yellow {
+  background-color: yellow !important;
+}
