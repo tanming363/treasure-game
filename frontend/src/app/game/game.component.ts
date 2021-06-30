@@ -14,6 +14,7 @@ export class GameComponent implements OnInit, OnDestroy {
   submitted: boolean = false;
   boardBoxes = [];
   count: number = 0;
+  turn: number = 0;
   score: number = 0;
   numTresure: number = 1;
   success: boolean = false;
@@ -58,8 +59,12 @@ export class GameComponent implements OnInit, OnDestroy {
       event.target.setAttribute("disabled", "");
 
       if (this.count === 3) {
-        console.log("NEW COUNT", this.count / 3);
-        this.users.push(this.count)
+        this.turn += 1;
+        this.users.push(this.turn - 1)
+        console.log("s", this.users);
+        this.userService.addUser(this.users).subscribe();
+        this.getAllUsers();
+        // 
         this.count = 0;
       }
     }

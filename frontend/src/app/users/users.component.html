@@ -9,7 +9,8 @@
         <tbody>
                 <tr *ngFor="let user of users">
                         <td>{{user.name}}</td>
-                        <td>{{user.count}}</td>
+                        <td *ngIf="!user.length==1">1</td>
+                        <td>{{user.length}}</td>
                 </tr>
         </tbody>
 </table>

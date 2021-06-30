@@ -7,24 +7,14 @@ import { Injectable } from '@angular/core';
 export class UserService {
   constructor(private http: HttpClient) { }
 
-  rootURL = 'http://localhost:3080';
+  rootURL = '/api';
 
   getUsers() {
-    return this.http.get(this.rootURL);
+    return this.http.get(this.rootURL + '/users');
   }
 
   addUser(user: any) {
-    return this.http.post(this.rootURL, { user });
+    return this.http.post(this.rootURL + '/user', { user });
   }
-
-  // rootURL = '/api';
-
-  // getUsers() {
-  //   return this.http.get(this.rootURL + '/users');
-  // }
-
-  // addUser(user: any) {
-  //   return this.http.post(this.rootURL + '/user', { user });
-  // }
 
 }
