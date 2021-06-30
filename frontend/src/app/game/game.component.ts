@@ -73,6 +73,7 @@ export class GameComponent implements OnInit, OnDestroy {
   destroy$: Subject<boolean> = new Subject<boolean>();
 
   onSubmit() {
+    this.submitted = true;
     this.userService.addUser(this.userForm.value).pipe(takeUntil(this.destroy$))
       .subscribe(data => {
         this.userForm.reset();
