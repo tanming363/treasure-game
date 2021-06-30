@@ -1,28 +1,33 @@
-import { Component, OnInit } from '@angular/core';
-import { User } from '../model/user.model'
-import { UserService } from '../service/user.service';
+import { Component, OnDestroy, OnInit } from '@angular/core';
+import { FormGroup, FormControl, Validators } from '@angular/forms';
+import { UserService } from '../user.service';
+import { takeUntil } from 'rxjs/operators';
+import { Subject } from 'rxjs';
 @Component({
   selector: 'app-game',
   templateUrl: './game.component.html',
   styleUrls: ['./game.component.scss']
 })
-export class GameComponent implements OnInit {
+export class GameComponent implements OnInit, OnDestroy {
   constructor(private userService: UserService) { }
+  users: any[] = [];
+  submitted: boolean = false;
+  boardBoxes = [];
+  count: number = 0;
+  score: number = 0;
+  numTresure: number = 1;
+  success: boolean = false;
+  start: boolean = false;
+  userForm = new FormGroup({
+    name: new FormControl('', Validators.nullValidator && Validators.required),
+  });
 
   ngOnInit() {
     this.printBaard();
-    this.getUserName()
+    this.getAllUsers();
   }
-  submitted: boolean = false;
-  items = [];
-  scores = [];
-  count: number = 0;
-  total: number = 0;
-  score: number = 0;
-  turn: number = 0;
-  numTresure: number = 1;
-  success: boolean = false;
-  name: string;
+
+  // BOARD GENEARATION
   printBaard() {
     for (let i = 1; i < 26; i++) {
       let random: any = Math.floor(Math.random() * 3) + 1;
@@ -31,7 +36,7 @@ export class GameComponent implements OnInit {
         const treasure = "T";
         random = treasure;
       }
-      this.items.push(random);
+      this.boardBoxes.push(random);
     };
   }
 
@@ -53,26 +58,32 @@ export class GameComponent implements OnInit {
       event.target.setAttribute("disabled", "");
 
       if (this.count === 3) {
+        console.log("NEW COUNT", this.count / 3);
+        this.users.push(this.count)
         this.count = 0;
-        this.count += 1;
-        this.scores.push(this.count)
-        console.log("NEW COUNT", this.count);
       }
     }
   }
-  userModel = new User("")
+
+  destroy$: Subject<boolean> = new Subject<boolean>();
 
   onSubmit() {
-    this.submitted = true;
-    this.userService.postPlayerName(this.userModel).subscribe(
-      data => console.log("Success", data),
-      error => console.log("Error", error),
-    )
+    this.userService.addUser(this.userForm.value).pipe(takeUntil(this.destroy$))
+      .subscribe(data => {
+        this.userForm.reset();
+      });
+    this.start = true;
+    this.getAllUsers();
   }
-
-  getUserName() {
-    this.userService.getPlayerName().subscribe((res) => {
-      this.userService.users = res;
-    });
+  getAllUsers() {
+    this.userService.getUsers()
+      .pipe(takeUntil(this.destroy$))
+      .subscribe((users: any[]) => {
+        this.users = users;
+      });
+  }
+  ngOnDestroy() {
+    this.destroy$.next(true);
+    this.destroy$.unsubscribe();
   }
 }
